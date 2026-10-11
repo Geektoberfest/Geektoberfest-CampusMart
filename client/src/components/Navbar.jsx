@@ -1,13 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Logo from "./Logo";
 export default function Navbar() {
   const { user, logout } = useAuth();
   const nav = useNavigate();
   return (
     <header className="nav">
-      <Link className="brand" to="/">
-        CampusMart
-      </Link>
+      <Logo className="brand" />
       <nav>
         <Link to="/marketplace">Browse</Link>
         {user && <Link to="/sell">Sell Item</Link>}

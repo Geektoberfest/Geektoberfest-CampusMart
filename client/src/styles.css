@@ -36,8 +36,24 @@ textarea {
   z-index: 10;
 }
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 800;
   font-size: 22px;
+}
+.logo-text {
+  font-weight: inherit;
+  font-size: inherit;
+}
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 .nav nav {
   display: flex;
