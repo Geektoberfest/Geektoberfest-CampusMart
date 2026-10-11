@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Logo from "../components/Logo";
 
 export default function Register() {
   const { register } = useAuth();
@@ -30,6 +31,7 @@ export default function Register() {
   };
   return (
     <div className="auth-page">
+      <Logo className="auth-logo" size={36} />
       <form className="auth-card form" onSubmit={submit}>
         <span className="eyebrow">JOIN CAMPUSMART</span>
         <h1>Create your account</h1>
