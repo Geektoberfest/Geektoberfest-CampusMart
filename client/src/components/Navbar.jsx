@@ -12,6 +12,7 @@ export default function Navbar() {
         <Link to="/marketplace">Browse</Link>
         {user && <Link to="/sell">Sell Item</Link>}
         {user && <Link to="/my-listings">My Listings</Link>}
+        {user && <Link to="/wishlist">Wishlist</Link>}
         {user?.isAdmin && <Link to="/admin">Admin</Link>}
       </nav>
       <div className="nav-actions">
