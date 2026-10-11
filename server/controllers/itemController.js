@@ -37,9 +37,15 @@ exports.getItems = async (req, res) => {
     priceAsc: { price: 1 },
     priceDesc: { price: -1 },
   };
-  const p = Math.max(1, Number(page)),
-    l = Math.min(50, Math.max(1, Number(limit)));
+  const parsePositiveInt = (value, fallback) => {
+    const n = Number(value);
+    if (!Number.isInteger(n) || n < 1) return fallback;
+    return n;
+  };
+  const p = parsePositiveInt(page, 1);
+  const l = Math.min(50, parsePositiveInt(limit, 12));
   const total = await Item.countDocuments(q);
+  const totalPages = Math.ceil(total / l);
   const items = await Item.find(q)
     .populate("seller", "name email department year")
     .sort(sorts[sort] || sorts.newest)
@@ -48,8 +54,9 @@ exports.getItems = async (req, res) => {
   ok(res, 200, "Listings fetched.", {
     listings: items,
     currentPage: p,
-    totalPages: Math.ceil(total / l),
+    totalPages,
     totalItems: total,
+    pageSize: l,
   });
 };
 exports.getItem = async (req, res) => {
