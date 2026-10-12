@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
+
 export default function Navbar() {
   const { user, logout } = useAuth();
   const nav = useNavigate();
@@ -14,6 +16,7 @@ export default function Navbar() {
         {user?.isAdmin && <Link to="/admin">Admin</Link>}
       </nav>
       <div className="nav-actions">
+        <ThemeToggle />
         {user ? (
           <>
             <Link to="/profile" className="user-chip">
