@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -15,11 +16,13 @@ import MyListings from "./pages/MyListings";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import "./styles.css";
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Navbar />
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Navbar />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -71,8 +74,9 @@ export default function App() {
             />
           </Routes>
         </main>
-        <Footer />
-      </AuthProvider>
-    </BrowserRouter>
+          <Footer />
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
