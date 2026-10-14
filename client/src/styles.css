@@ -276,6 +276,8 @@ textarea {
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 7px;
   margin: 30px;
 }
@@ -284,10 +286,19 @@ textarea {
   border-radius: 8px;
   padding: 8px 12px;
   background: #fff;
+  cursor: pointer;
+}
+.pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .pagination .active {
   background: #171717;
   color: #fff;
+}
+.pagination-gap {
+  padding: 0 4px;
+  color: #73736d;
 }
 .details {
   display: grid;
