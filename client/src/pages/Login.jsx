@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Logo from "../components/Logo";
 export default function Login() {
   const { login } = useAuth();
   const nav = useNavigate();
@@ -22,6 +23,7 @@ export default function Login() {
   };
   return (
     <div className="auth-page">
+      <Logo className="auth-logo" size={36} />
       <form className="auth-card form" onSubmit={submit}>
         <span className="eyebrow">WELCOME BACK</span>
         <h1>Login to CampusMart</h1>

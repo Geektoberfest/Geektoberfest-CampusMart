@@ -1,8 +1,19 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import ItemCard from "../components/ItemCard";
+import { getItems } from "../services/itemService";
 import { useNavigate } from "react-router-dom";
 export default function Home() {
   const nav = useNavigate();
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getItems({ limit: 8, sort: "newest" })
+      .then((r) => setListings(r.data.data.listings || []))
+      .catch(() => setListings([]))
+      .finally(() => setLoading(false));
+  }, []);
   return (
     <>
       <section className="hero">
@@ -57,6 +68,28 @@ export default function Home() {
             </Link>
           ))}
         </div>
+      </section>
+      <section className="section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">FRESH LISTINGS</span>
+            <h2>Latest on campus</h2>
+          </div>
+          <Link className="btn secondary" to="/marketplace">
+            View all
+          </Link>
+        </div>
+        {loading ? (
+          <div className="center">Loading listings...</div>
+        ) : listings.length ? (
+          <div className="item-grid">
+            {listings.map((item) => (
+              <ItemCard item={item} key={item._id} />
+            ))}
+          </div>
+        ) : (
+          <p className="muted">No listings yet. Be the first to sell.</p>
+        )}
       </section>
     </>
   );

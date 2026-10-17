@@ -15,6 +15,10 @@ export default function ItemCard({ item }) {
     if (!user) return nav("/login");
     toggle(item._id);
   };
+  const sold = item.status === "Sold";
+  const imageSrc = item.images?.[0]
+    ? `${API}${item.images[0]}`
+    : "/placeholder.svg";
   return (
     <Link className="card item-card" to={`/items/${item._id}`}>
       <div className="item-image">
@@ -33,14 +37,14 @@ export default function ItemCard({ item }) {
         </button>
       </div>
       <div className="card-body">
-        <div className="muted">
+        <div className="muted item-card-meta">
           {item.category} · {item.condition}
         </div>
-        <h3>{item.title}</h3>
-        <strong>₹{Number(item.price).toLocaleString("en-IN")}</strong>
-        <p className="muted">
-          {item.location} · {item.status}
-        </p>
+        <h3 className="item-card-title">{item.title}</h3>
+        <strong className="item-card-price">
+          ₹{Number(item.price).toLocaleString("en-IN")}
+        </strong>
+        <p className="muted item-card-location">{item.location}</p>
       </div>
     </Link>
   );

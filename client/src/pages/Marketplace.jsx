@@ -7,6 +7,11 @@ import ItemCard from "../components/ItemCard";
 import EmptyState from "../components/EmptyState";
 export default function Marketplace() {
   const [params, setParams] = useSearchParams();
+  const PAGE_SIZE = 12;
+  const parsePage = (v) => {
+    const n = Number(v);
+    return Number.isInteger(n) && n >= 1 ? n : 1;
+  };
   const [filters, setFilters] = useState({
     category: params.get("category") || "",
     condition: "",
@@ -15,6 +20,7 @@ export default function Marketplace() {
     sort: params.get("sort") || "newest",
     search: params.get("search") || "",
   });
+  const [page, setPage] = useState(() => parsePage(params.get("page")));
   const [data, setData] = useState({
     listings: [],
     currentPage: 1,
@@ -22,20 +28,33 @@ export default function Marketplace() {
     totalItems: 0,
   });
   const [loading, setLoading] = useState(true);
-  const load = async (page = 1) => {
-    setLoading(true);
-    try {
-      const r = await getItems({ ...filters, page, limit: 12 });
-      setData(r.data.data);
-      setParams(
-        Object.fromEntries(Object.entries(filters).filter(([, v]) => v)),
-      );
-    } finally {
-      setLoading(false);
-    }
+  const getPageNumbers = (current, total) => {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const window = [current - 1, current, current + 1].filter(
+      (n) => n > 1 && n < total,
+    );
+    return [1, ...window, total].reduce((acc, n, i, arr) => {
+      if (i > 0 && n - arr[i - 1] > 1) acc.push("…");
+      acc.push(n);
+      return acc;
+    }, []);
   };
   useEffect(() => {
-    load();
+    const run = async () => {
+      setLoading(true);
+      try {
+        const r = await getItems({ ...filters, page, limit: PAGE_SIZE });
+        setData(r.data.data);
+        const next = { ...filters };
+        if (page > 1) next.page = String(page);
+        setParams(
+          Object.fromEntries(Object.entries(next).filter(([, v]) => v)),
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    run();
   }, [
     filters.category,
     filters.condition,
@@ -43,7 +62,18 @@ export default function Marketplace() {
     filters.maxPrice,
     filters.sort,
     filters.search,
+    page,
   ]);
+  const updateFilters = (next) => {
+    setFilters(next);
+    setPage(1);
+  };
+  const goToPage = (next) => {
+    const total = data.totalPages || 1;
+    const clamped = Math.min(Math.max(1, next), total);
+    setPage(clamped);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <section className="section">
       <div className="page-head">
@@ -55,9 +85,9 @@ export default function Marketplace() {
       </div>
       <SearchBar
         initial={filters.search}
-        onSearch={(search) => setFilters({ ...filters, search })}
+        onSearch={(search) => updateFilters({ ...filters, search })}
       />
-      <FilterPanel filters={filters} setFilters={setFilters} />
+      <FilterPanel filters={filters} setFilters={updateFilters} />
       {loading ? (
         <div className="center">Loading listings...</div>
       ) : data.listings.length ? (
@@ -67,17 +97,45 @@ export default function Marketplace() {
               <ItemCard item={i} key={i._id} />
             ))}
           </div>
-          <div className="pagination">
-            {Array.from({ length: data.totalPages }, (_, i) => (
+          {data.totalPages > 1 && (
+            <div
+              className="pagination"
+              role="navigation"
+              aria-label="Marketplace pages"
+            >
               <button
-                className={data.currentPage === i + 1 ? "active" : ""}
-                key={i}
-                onClick={() => load(i + 1)}
+                onClick={() => goToPage(data.currentPage - 1)}
+                disabled={data.currentPage <= 1 || loading}
+                aria-label="Previous page"
               >
-                {i + 1}
+                Previous
               </button>
-            ))}
-          </div>
+              {getPageNumbers(data.currentPage, data.totalPages).map((n, i) =>
+                n === "…" ? (
+                  <span key={`gap-${i}`} className="pagination-gap">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    className={data.currentPage === n ? "active" : ""}
+                    aria-current={data.currentPage === n ? "page" : undefined}
+                    aria-label={`Page ${n}`}
+                    key={n}
+                    onClick={() => goToPage(n)}
+                  >
+                    {n}
+                  </button>
+                ),
+              )}
+              <button
+                onClick={() => goToPage(data.currentPage + 1)}
+                disabled={data.currentPage >= data.totalPages || loading}
+                aria-label="Next page"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </>
       ) : (
         <EmptyState />

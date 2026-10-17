@@ -1,0 +1,25 @@
+import { Link } from "react-router-dom";
+
+export default function Logo({ size = 28, className = "" }) {
+  return (
+    <Link to="/" className={className}>
+      <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#16A34A" />
+        <path d="M17 25H47L44 49H20L17 25Z" fill="#FFFFFF" />
+        <path
+          d="M24 26V20C24 15.6 27.6 12 32 12C36.4 12 40 15.6 40 20V26"
+          stroke="#FFFFFF"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M39 32C37.3 30.7 35.4 30 33.2 30C28.5 30 25 33.4 25 37.5C25 41.6 28.5 45 33.2 45C35.4 45 37.3 44.3 39 43"
+          stroke="#16A34A"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="logo-text">CampusMart</span>
+    </Link>
+  );
+}
