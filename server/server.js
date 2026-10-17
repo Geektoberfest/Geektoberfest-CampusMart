@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const itemRoutes = require("./routes/itemRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
 
 const { notFound, errorHandler } = require("./middleware/error");
 
@@ -85,6 +86,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 /* =========================
    Error Handling
